@@ -12,6 +12,7 @@ class redditTools:
             response = reddit.get(path)
             for sub in response["data"]:
                 moddedSubs.append(sub["sr"])
+            moddedSubs = [x.lower() for x in moddedSubs]
             return(moddedSubs)
         except Exception as e:
             print("There was a problem fetching user's modded subs: "+str(e))
@@ -21,16 +22,18 @@ class redditTools:
         try:
             for contributor in reddit.subreddit(subreddit).contributor():
                 contributorList.append(str(contributor))
+            contributorList = [x.lower() for x in contributorList]
             return(contributorList)
         except Exception as e:
-            print("There was a problem fetching user's modded subs: "+str(e))
-            print('A 403 error generally indicates a permissions problem')
+            print("There was a problem fetching subreddit's contributors: "+subreddit+"-"+str(e))
+            print('A 403 error indicates a permissions problem')
 
     def getMods(subreddit, reddit):
         modList=[]
         try:
             for mod in reddit.subreddit(subreddit).moderator():
                 modList.append(str(mod))
+            modList = [x.lower() for x in modList]
             return modList
         except Exception as e:
             print("There was a problem fetching subs's mods: "+str(e))
@@ -43,8 +46,8 @@ class redditTools:
             return(config)
         except Exception as e:
             print('There was a problem getting sub config: '+str(e))
-            print('A 403 error generally indicates a permissions problem')
-            print('A 404 error generally indicates the wiki page does not exist')
+            print('A 403 error indicates a permissions problem')
+            print('A 404 error indicates the wiki page does not exist')
             
     def getSubPermissions(subreddit, username, reddit):
         permissionList=[]
@@ -57,7 +60,7 @@ class redditTools:
     def logOutput(threadID, logText, data1, data2, reddit):
         logThread = reddit.submission(id=threadID)
         print(logText+''+data1+'-'+data2)
-        logThread.reply(logText+'\n\n'+data1+'\n\n'+data2)
+        logThread.reply(logText+'\n\nData 1:'+data1+'\n\nData 2:'+data2)
         
     def readWiki(subreddit, page, reddit):
         try:
