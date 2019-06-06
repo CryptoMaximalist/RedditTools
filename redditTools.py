@@ -62,10 +62,14 @@ class redditTools:
         print(logText+''+data1+'-'+data2)
         logThread.reply(logText+'\n\nData 1:'+data1+'\n\nData 2:'+data2)
         
-    def readWiki(subreddit, page, reddit):
+    def readWiki(subreddit, page, returnFormat, reddit):
         try:
             wikiPage = reddit.subreddit(subreddit).wiki[page]
-            return(wikiPage.content_md)
+            if returnFormat == 'list':
+                data_list = [y for y in (x.strip() for x in wikiPage.content_md.splitlines()) if y]
+                return(data_list)
+            else:
+                return(wikiPage.content_md)
         except Exception as e:
             print("There was a problem fetching wiki page's contents: "+str(e))
         
@@ -75,5 +79,3 @@ class redditTools:
             wikiPage.edit(newData) 
         except Exception as e:
             print("There was a problem writing to wiki page: "+str(e))
-
-
